@@ -1,20 +1,25 @@
 Rails.application.routes.draw do
   # For details on the DSL available within this file, see https://guides.rubyonrails.org/routing.html
-  root 'homepage#index'
+  root 'homepage#home'
 
-    get '/feeds' => 'feeds#index'
+    namespace :api do
+      # Users
+      post '/users' => 'users#create'
 
-    # Users
-    post '/sessions' => 'sessions#create'
-    get '/authenticated' => 'sessions#authenticated'
-    delete '/sessions' => 'sessions#destroy'
+      # Sessions
+      post '/sessions' => 'sessions#create'
+      get '/authenticated' => 'sessions#authenticated'
+      delete '/sessions' => 'sessions#destroy'
 
-    # Tweets
-    post '/tweets' => 'tweets#create'
-    get '/tweets' => 'tweets#index'
-    delete '/tweets/:id' => 'tweets#destroy'
-    get '/users/:username/tweets' => 'tweets#index_by_user'
+      # Tweets
+      post '/tweets' => 'tweets#create'
+      get '/tweets' => 'tweets#index'
+      delete '/tweets/:id' => 'tweets#destroy'
+      get '/users/:username/tweets' => 'tweets#index_by_user'
+      get '/tweets/search/:keyword' => 'tweets#search'
+    end
 
-    # Redirect all other paths to index page, which will be taken over by AngularJS
-    # get '*path' => 'homepage#index'
+    get '/feeds' => 'homepage#feeds'
+    get '/:username' => 'homepage#userpage'
+    get '*path' => 'homepage#home'
 end
