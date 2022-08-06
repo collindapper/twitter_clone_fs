@@ -7,8 +7,14 @@
     <%= csp_meta_tag %>
 
     <%= stylesheet_link_tag 'application', media: 'all' %>
-    <!-- <%= javascript_pack_tag 'application' %> -->
-    <!-- <%= stylesheet_packs_with_chunks_tag 'application' %> -->
+    <%= javascript_include_tag 'application %>
+    <%= javascript_pack_tag 'application' %>
+
+    <!-- loading jquery library bootstrap jquery library and custom app.js -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
     
   </head>
 
