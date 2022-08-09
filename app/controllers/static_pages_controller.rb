@@ -1,4 +1,5 @@
 class HomepageController < ApplicationController
-  def index
+  def home
+    render 'home'
   end
 end
