@@ -1,6 +1,7 @@
 Rails.application.routes.draw do
   # For details on the DSL available within this file, see https://guides.rubyonrails.org/routing.html
-  root 'homepage#home'
+  root 'static_pages#home'
+  get '/feeds' => 'static_pages#feeds'
 
     namespace :api do
       # Users
@@ -19,7 +20,7 @@ Rails.application.routes.draw do
       get '/tweets/search/:keyword' => 'tweets#search'
     end
 
-    get '/feeds' => 'homepage#feeds'
-    get '/:username' => 'homepage#userpage'
-    get '*path' => 'homepage#home'
+
+    get '/:username' => 'static_pages#userpage'
+    get '*path' => 'static_pages#home'
 end

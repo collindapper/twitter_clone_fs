@@ -8,7 +8,9 @@
 
     <%= stylesheet_link_tag 'application', media: 'all' %>
     
-    <%= javascript_pack_tag 'application' %>
+    <!-- <%= javascript_pack_tag 'application' %> -->
+
+    <%= stylesheet_packs_with_chunks_tag 'application' %>
 
     
   </head>
