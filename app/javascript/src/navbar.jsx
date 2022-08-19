@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { safeCredentials, handleErrors } from './utils/fetchHelper';
+import { safeCredentials, handleErrors } from '@utils/fetchHelper';
 
 import './navbar.scss';
 
@@ -8,39 +8,54 @@ class Navbar extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      currentUser: 'User',
+      authenticated: false,
+      currentUser: '',
     }
-    this.handleLogout = this.handleLogout.bind(this);
   }
 
 componentDidMount () {
-  fetch(`/api/authenticated`, safeCredentials({
-    method: 'GET',
-  }))
+  fetch(`/api/authenticated`)
   .then(handleErrors)
-  .then(res => {
-    this.setState({ currentUser: res.username });
+  .then(data => {
+    this.setState({
+      currentUser: data.username,
+      authenticated: data.authenticated, 
+    });
   })
 }
 
 
-handleLogout(event) {
-  event.preventDefault();
+handleLogout = (e) => {
+  e.preventDefault();
+
   fetch(`/api/sessions`, safeCredentials({
     method: 'DELETE',
   }))
   .then(handleErrors)
-  .then(res => {
-    console.log(res);
-    window.location.replace("/");
+  .then(data => {
+    console.log('data', data)
+    if (data.success) {
+      this.setState({
+        authenticated: false,
+      })
+      const params = new URLSearchParams(window.location.search);
+      const redirect_url = params.get('redirect_url') || '/feeds';
+      window.location = redirect_url;
+    }
+  })
+  .catch(error => {
+    this.setState({
+      error: 'Could not sign out.',
+    })
   })
 }
+
   render () {
     const {currentUser} = this.state;
 
     return (
-      <React.Fragment>
-        <nav className="navbar-default navbar-fixed-top">
+      <React.Fragment> 
+        <nav className="d-flex navbar-default navbar-fixed-top">
           <div className="container">
             <div className="navbar-header">
               <a className="navbar-brand" href="#">
@@ -73,7 +88,6 @@ handleLogout(event) {
             </div>
           </div>
         </nav>
-
         <div>
           {this.props.children}
         </div>
@@ -81,13 +95,5 @@ handleLogout(event) {
     );
   }
 }
-
-
-document.addEventListener('DOMContentLoaded', () => {
-  ReactDOM.render(
-    <Navbar />,
-    document.body.appendChild(document.createElement('div')),
-  )
-})
 
 export default Navbar;

@@ -1,7 +1,9 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import LoginWidget from './loginWidget';
+import SignupWidget from './signupWidget';
 import Layout from './layout';
-import { safeCredentials, handleErrors } from './utils/fetchHelper';
+import { safeCredentials, handleErrors } from '@utils/fetchHelper';
 
 import './home.scss';
 
@@ -16,23 +18,20 @@ const backgroundURL = [
 ]
 
 class Home extends React.Component {
-constructor(props) {
-  super(props);
-
-  this.state = {
+  state = {
+    authenticated: false,
     backStep: 0,
-    login_username: '',
-    login_password: '',
-    signup_username: '',
-    signup_email: '',
-    signup_password: '',
-  }
-
-  this.handleChange = this.handleChange.bind(this);
-  this.handleLogin = this.handleLogin.bind(this);
-  this.handleSignup = this.handleSignup.bind(this);
 }
+
 componentDidMount () {
+  fetch('/api/authenticated')
+      .then(handleErrors)
+      .then(data => {
+        this.setState({
+          authenticated: data.authenticated,
+        })
+      })
+
   this.backgroundTimer = window.setInterval(() => {
     let backStep = this.state.backStep + 1;
     if (backStep == backgroundURL.length) {
@@ -44,60 +43,6 @@ componentDidMount () {
 
 componentWillUnmount () {
   window.clearInterval(this.backgroundTimer);
-}
-
-handleChange(event) {
-  const { name, value } = event.target;
-  this.setState({ [name]: value });
-}
-
-createSession () {
-  const { login_username, login_password } = this.state;
-
-  fetch(`/api/sessions`, safeCredentials({
-    method: 'POST',
-    body: JSON.stringify({
-      user: {
-        username: login_username,
-        password: login_password
-      }
-    })
-  }))
-  .then(handleErrors)
-  .then(res => {
-    console.log(res);
-      window.location.replace("/feeds");
-  })
-}
-
-handleLogin(event) {
-  event.preventDefault();
-  this.createSession();
-}
-
-handleSignup(event) {
-  event.preventDefault();
-  const { signup_email, signup_password, signup_username } = this.state;
-
-  this.setState({login_username: signup_username});
-  this.setState({login_password: signup_password});
-
-  fetch(`/api/users`, safeCredentials({
-    method: 'POST',
-    body: JSON.stringify({
-      user: {
-        username: signup_username,
-        email: signup_email,
-        password: signup_password,
-      }
-    })
-  }))
-  .then(handleErrors)
-  .then(res => {
-    console.log(res);
-    console.log(signup_email, signup_password, signup_username);
-    this.createSession();
-  })
 }
 
 render () {
@@ -126,40 +71,13 @@ render () {
               <div className="row col-12 col-md-4 mx-auto">
 
                 <div className="log-in col-12 mb-2">
-                  <form onSubmit={this.handleLogin}>
-                    <div className="form-group">
-                      <input type="text" className="form-control username mb-2" placeholder="Username" onChange={this.handleChange} value={login_username} name="login_username" required/>
-                    </div>
-                    <div className="form-group">
-                      <input type="password" className="form-control password mb-2" placeholder="Password" onChange={this.handleChange} value={login_password} name="login_password" required/>
-                    </div>
-                    <button id="log-in-btn" className="btn btn-default btn-primary col-xs-3 col-xs-offset-1 me-2">Log in</button>
-                    <label>
-                      <input type="checkbox" className="me-2" />
-                      <span>Remember me</span>
-                      <span> &#183; </span>
-                    </label>
-                    <a href="#" className="ms-1">Forgot password?</a>
-                  </form>
+                  <LoginWidget />
                 </div>
 
                 <div className="sign-up col-12">
-                  <form onSubmit={this.handleSignup}>
-                    <div className="new-to-t">
-                      <p><strong>New to Twitter?</strong><span> Sign Up</span></p>
-                    </div>
-                    <div className="form-group">
-                      <input type="text" className="form-control username mb-2" placeholder="Username" onChange={this.handleChange} value={signup_username} name="signup_username" required />
-                    </div>
-                    <div className="form-group">
-                      <input type="email" className="form-control email mb-2" placeholder="Email" onChange={this.handleChange} value={signup_email} name="signup_email" required />
-                    </div>
-                    <div className="form-group">
-                      <input type="password" className="form-control password mb-2" placeholder="Password" onChange={this.handleChange} value={signup_password} name="signup_password" required />
-                    </div>
-                    <button id="sign-up-btn" className="btn btn-default btn-warning pull-right">Sign up for Twitter</button>
-                  </form>
+                  <SignupWidget />
                 </div>
+
               </div>
             </div>
           </div>

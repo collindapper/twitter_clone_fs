@@ -2,7 +2,15 @@ module Api
   class TweetsController < ApplicationController
     def index
       @tweets = Tweet.all.order(created_at: :desc)
+      return render json: { error: 'not_found'}
       render 'api/tweets/index'
+    end
+
+    def show
+      @tweet = Tweet.find_by(id: params[:id])
+      return render json: { error: 'not_found' }, status: :not_found if !@tweet
+
+      render 'api/tweets/show', status: :ok
     end
 
     def create
@@ -26,13 +34,9 @@ module Api
       tweet = Tweet.find_by(id: params[:id])
 
       if tweet and tweet.user == user and tweet.destroy
-        render json: {
-          success: true
-        }
+        render json: { success: true }, status: :ok
       else
-        render json: {
-          success: false
-        }
+        render json: { success: false }, status: :bad_request
       end
     end
 
@@ -48,7 +52,7 @@ module Api
     private
 
       def tweet_params
-        params.require(:tweet).permit(:message, :image)
+        params.require(:tweet).permit(:message)
       end
   end
 end

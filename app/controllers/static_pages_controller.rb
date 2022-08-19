@@ -6,4 +6,8 @@ class StaticPagesController < ApplicationController
   def feeds
     render 'feeds'
   end
+
+  def user_tweets
+    render 'user_tweets'
+  end
 end
