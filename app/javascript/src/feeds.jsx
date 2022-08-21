@@ -106,7 +106,7 @@ class Feeds extends React.Component {
             <div className="col-xs-6 feed-box">
               <div className="col-xs-12 post-tweet-box">
 
-                <AddTweet />
+                {this.props.children}
 
                 {tweets.map(tweet => {
                   return (
@@ -116,9 +116,10 @@ class Feeds extends React.Component {
                         <img className="tweet-image mb-1 rounded" src={tweet.image} />
                       </a>
                     </div>
-                  )
-                })}
-              </div>
+                    )
+                  })}
+
+                </div>
               <div className="feed">
                
               </div>
@@ -134,7 +135,9 @@ class Feeds extends React.Component {
 
 document.addEventListener('DOMContentLoaded', () => {
   ReactDOM.render(
-    <Feeds />,
+    <Feeds>
+      <AddTweet />
+    </Feeds>,
     document.body.appendChild(document.createElement('div')),
   )
 })
