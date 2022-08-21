@@ -2,9 +2,9 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import Navbar from './navbar';
 
-import './userpage.scss';
+import './user_tweets.scss';
 
-class Userpage extends React.Component {
+class UserTweets extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -22,9 +22,9 @@ class Userpage extends React.Component {
         method: 'GET',
       })
       .then(handleErrors)
-      .then(res => {
+      .then(data => {
         console.log(res);
-        this.setState({tweets: res.tweets})
+        this.setState({tweets: data.tweets})
       })
     }
 
@@ -109,7 +109,7 @@ class Userpage extends React.Component {
 
   document.addEventListener('DOMContentLoaded', () => {
     ReactDOM.render(
-      <Userpage />,
+      <UserTweets />,
       document.body.appendChild(document.createElement('div')),
     )
   })

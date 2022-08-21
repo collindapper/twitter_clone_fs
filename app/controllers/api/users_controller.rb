@@ -6,9 +6,7 @@
       if @user.save
         render 'api/users/create'
       else
-        render json: {
-          success: false
-        }
+        render json: { success: false }, status: :bad_request
       end
     end
 

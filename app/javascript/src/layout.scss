@@ -1,6 +1,12 @@
 .navbar-default {
   background-color: white;
   margin-bottom: 0;
+  height: 50px;
+  z-index: 1;
+}
+
+#dropdownList {
+  position: fixed;
 }
 
 .navbar-header {

@@ -1,63 +1,27 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import Navbar from './navbar';
-import { safeCredentials, handleErrors } from './utils/fetchHelper';
+import AddTweet from './add_tweet';
+import { safeCredentials, safeCredentialsFormData,  handleErrors } from '@utils/fetchHelper';
 
 import './feeds.scss';
 
 
-class Tweet extends React.Component {
-  render () {
-
-    const { tweet, onDelete } = this.props;
-    const { id, message, username } = tweet;
-
-    return (
-      <div className="tweetBox col-xs-12">
-        <a className="tweetUsername" href="#">{username}</a>
-        <a className="screenName" href="#">  @{username}</a>
-        <p>{message}</p>
-        <a className="delete-tweet" onClick={() => onDelete(id)}>Delete</a>
-      </div>
-    )
-  }
-}
-
-
-class Feed extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
+class Feeds extends React.Component {
+    state = {
       currentUser: 'User',
-      userTweet: '',
       tweets: [],
-      charCount: 0,
-      tweetButton: true,
-    }
-    this.handleChange = this.handleChange.bind(this);
-    this.handleSubmit = this.handleSubmit.bind(this);
-    this.displayUsername = this.displayUsername.bind(this);
-    this.countChar = this.countChar.bind(this);
-    this.postTweet = this.postTweet.bind(this);
-    this.getTweets = this.getTweets.bind(this);
-    this.deleteTweet = this.deleteTweet.bind(this);
-    //this.filterTweets = this.filterTweets.bind(this);
-    //this.fileInput = React.createRef();
   }
 
   componentDidMount () {
+    fetch('/api/tweets/')
+    .then(handleErrors)
+    .then(data => {
+      this.setState({
+        tweets: data.tweets,
+      })
+    })
     this.displayUsername();
-    this.getTweets();
-  }
-
-  handleChange(event) {
-    const { name, value } = event.target;
-    this.setState({ [name]: value });
-  }
-
-  handleSubmit(event) {
-    event.preventDefault();
-    this.postTweet();
   }
 
   displayUsername() {
@@ -65,64 +29,10 @@ class Feed extends React.Component {
       method: 'GET',
     }))
     .then(handleErrors)
-    .then(res => {
-      this.setState({ currentUser: res.username });
+    .then(data => {
+      this.setState({ 
+        currentUser: data.username });
     })
-  }
-
-  getTweets() {
-    fetch(`/api/tweets`, {
-      method: 'GET',
-    })
-    .then(handleErrors)
-    .then(res => {
-      console.log(res);
-      this.setState({tweets: res.tweets})
-    })
-  }
-
-  countChar() {
-    let {userTweet} = this.state;
-    userTweet = userTweet.trim();
-
-    let {charCount} = this.state;
-    charCount =  userTweet.length;
-
-    let {tweetButton} = this.state;
-
-    if (charCount > 0 && charCount <= 140) {
-      this.setState({charCount: userTweet.length})
-      this.setState({userTweet: userTweet.trim()})
-      this.setState({tweetButton: false});
-      //console.log(charCount);
-      //console.log(userTweet);
-    } else {
-      this.setState({tweetButton:true});
-    }
-  }
-
-  postTweet() {
-    const {userTweet} = this.state;
-    //let userFile = ${this.fileInput.current.files[0]};
-
-    fetch(`/api/tweets`, safeCredentials({
-      method: "POST",
-      mode:"cors",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        tweet: {
-          message: userTweet,
-          //image: userFile,
-        }
-      })
-    })).then((data) => {
-        console.log('success');
-        this.setState({userTweet:''});
-        this.getTweets();
-      })
-      .catch((error) => {
-        console.log(error);
-      })
   }
 
   deleteTweet(id) {
@@ -136,27 +46,14 @@ class Feed extends React.Component {
       headers: { "Content-Type": "application/json" },
     })).then((data) => {
         console.log('success');
-        this.getTweets();
       })
       .catch((error) => {
         console.log(error);
       })
   }
 
-  //filterTweets(username) {
-
-    //fetch(`api/users/username/tweets`, {
-      //method: 'GET',
-    //})
-    //.then(handleErrors)
-    //.then(res => {
-      //console.log(res);
-      //this.setState({tweets: res.tweets})
-    //})
-  //}
-
   render () {
-    const {currentUser, userTweet, charCount, tweetButton, tweets} = this.state;
+    const {currentUser, tweets } = this.state;
 
     return (
       <Navbar>
@@ -208,24 +105,23 @@ class Feed extends React.Component {
             </div>
             <div className="col-xs-6 feed-box">
               <div className="col-xs-12 post-tweet-box">
-                <form onSubmit={this.handleSubmit} className="form-inline my-4">
-                  <input type="text" className="form-control" placeholder="What's happening?" value={userTweet} onKeyUp={this.countChar} onChange={this.handleChange} name="userTweet" required/><br/>
-                  <div className="pull-right">
-                    //<label id="upload-image-btn" htmlFor="image-select">Upload image</label>
-                    //<input type="file" id="image-select" name="image" ref={this.fileInput} accept="image/*" />
-                    <button className="btn btn-primary" disabled={tweetButton} id="post-tweet-btn">Tweet</button>
-                  </div>
-                </form>
-              </div>
-              <div className="feed">
-                {tweets.length > 0 ? tweets.map((tweet) => {
-                  return (<Tweet
-                    key={tweet.id}
-                    tweet={tweet}
-                    onDelete={this.deleteTweet}
-                  />);
-                }) : <p>no tweets here</p>}
 
+                {this.props.children}
+
+                {tweets.map(tweet => {
+                  return (
+                    <div key={tweet.id} className="col-6 col-lg-4 mb-4 tweet">
+                      <a href={`/tweet/${tweet.id}`} className="text-body text-decoration-none">
+                        <p className="text-uppercase mb-0 text-secondary">{tweet.message}</p>
+                        <img className="tweet-image mb-1 rounded" src={tweet.image} />
+                      </a>
+                    </div>
+                    )
+                  })}
+
+                </div>
+              <div className="feed">
+               
               </div>
             </div>
             <div className="col-xs-3 follow-suggest">
@@ -239,7 +135,9 @@ class Feed extends React.Component {
 
 document.addEventListener('DOMContentLoaded', () => {
   ReactDOM.render(
-    <Feed />,
+    <Feeds>
+      <AddTweet />
+    </Feeds>,
     document.body.appendChild(document.createElement('div')),
   )
 })
