@@ -2,8 +2,10 @@ module Api
   class TweetsController < ApplicationController
     def index
       @tweets = Tweet.all.order(created_at: :desc)
-      return render json: { error: 'not_found'}
-      render 'api/tweets/index'
+      return render json: { error: 'not_found'}, status: :not_found
+      if !@tweets
+
+      render 'api/tweets/index', status: :ok
     end
 
     def show
@@ -45,14 +47,15 @@ module Api
 
       if user
         @tweets = user.tweets
-        render 'api/users/index'
+        render 'api/tweets/details'
       end
     end
 
     private
 
       def tweet_params
-        params.require(:tweet).permit(:message)
+        params.require(:tweet).permit(:message, :image)
       end
   end
+end
 end

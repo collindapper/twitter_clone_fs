@@ -14,8 +14,8 @@ Rails.application.routes.draw do
       delete '/sessions' => 'sessions#destroy'
 
       # Tweets
-      post '/tweets/create' => 'tweets#create'
-      get '/tweets' => 'tweets#index'
+      post '/tweets' => 'tweets#create'
+      get '/tweets/' => 'tweets#index'
       get '/tweets/:id' => 'tweets#show'
       get '/users/:username/tweets' => 'tweets#index_by_user'
       get '/tweets/search/:keyword' => 'tweets#search'

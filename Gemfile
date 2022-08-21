@@ -33,6 +33,12 @@ gem 'image_processing', '~> 1.2'
 # Reduces boot times through caching; required in config/boot.rb
 gem 'bootsnap', '>= 1.4.4', require: false
 
+# AWS S3
+gem 'aws-sdk-s3', '~> 1.112'
+
+# Webrick
+gem "webrick", "~> 1.7"
+
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
   gem 'byebug', platforms: [:mri, :mingw, :x64_mingw]
