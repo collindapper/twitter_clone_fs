@@ -21,6 +21,8 @@ module Api
       @tweet = user.tweets.new(tweet_params)
 
       if @tweet.save
+        puts "params", params
+
         render 'api/tweets/create'
       end
     end
@@ -56,5 +58,4 @@ module Api
         params.require(:tweet).permit(:message, :image)
       end
   end
-end
 end
