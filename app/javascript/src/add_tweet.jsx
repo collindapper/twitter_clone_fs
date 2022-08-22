@@ -33,7 +33,7 @@ class AddTweet extends React.Component {
     formData.append('tweet[message]', this.state.message)
 
      //if (this.state.image_url !== null) {
-      formData.append('tweet[image]', this.state.image)
+      // formData.append('tweet[image]', this.state.image)
      //}
 
     fetch('/api/tweets', safeCredentialsFormData({
