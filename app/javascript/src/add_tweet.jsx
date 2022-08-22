@@ -9,7 +9,7 @@ class AddTweet extends React.Component {
     super(props);
     this.state = {
       message: '',
-      image: '',
+      image: null,
       charCount: 0,
     }
   }
@@ -32,9 +32,9 @@ class AddTweet extends React.Component {
     let formData = new FormData();
     formData.append('tweet[message]', this.state.message)
 
-     //if (this.state.image_url !== null) {
+     if (this.state.image_url !== null) {
       formData.append('tweet[image]', this.state.image)
-     //}
+     }
 
     fetch('/api/tweets', safeCredentialsFormData({
       method: 'POST',

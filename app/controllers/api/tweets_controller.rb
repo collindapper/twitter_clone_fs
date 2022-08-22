@@ -2,8 +2,7 @@ module Api
   class TweetsController < ApplicationController
     def index
       @tweets = Tweet.all.order(created_at: :desc)
-      return render json: { error: 'not_found'}, status: :not_found
-      if !@tweets
+      return render json: { error: 'not_found'}, status: :not_found if !@tweets
 
       render 'api/tweets/index', status: :ok
     end
