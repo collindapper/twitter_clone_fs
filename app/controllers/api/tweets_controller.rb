@@ -36,7 +36,8 @@ module Api
       user = session.user
       tweet = Tweet.find_by(id: params[:id])
 
-      if tweet and tweet.user == user and tweet.destroy
+      # if tweet and tweet.user == user and tweet.destroy
+      if tweet and tweet.destroy
         render json: { success: true }, status: :ok
       else
         render json: { success: false }, status: :bad_request
@@ -47,8 +48,8 @@ module Api
       user = User.find_by(username: params[:username])
 
       if user
-        @tweets = user.tweets
-        render 'api/tweets/details'
+        @tweets = (user.tweets).order(created_at: :desc)
+        render 'api/tweets/index'
       end
     end
 

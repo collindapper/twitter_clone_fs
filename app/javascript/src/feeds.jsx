@@ -14,6 +14,10 @@ class Feeds extends React.Component {
   }
 
   componentDidMount () {
+    this.loadFeeds()
+  }
+
+  loadFeeds() {
     fetch('/api/tweets/')
     .then(handleErrors)
     .then(data => {
@@ -35,19 +39,25 @@ class Feeds extends React.Component {
     })
   }
 
-  deleteTweet(id) {
-    if(!id) {
-      console.log("no tweet id");
-    }
+  deleteTweet = (e) => {
+    e.preventDefault();
+    let tweetEl = e.target.closest(".tweet")
+    let tweetId = tweetEl.getAttribute('id')
 
-    fetch(`/api/tweets/${id}`, safeCredentials({
+    fetch(`/api/tweets/${tweetId}`, safeCredentials({
       method: "DELETE",
-      mode:"cors",
-      headers: { "Content-Type": "application/json" },
-    })).then((data) => {
-        console.log('success');
+    }))
+      .then(handleErrors)
+      .then(data => {
+        if (data.success) {
+          this.loadFeeds()
+          console.log('success');
+        }
       })
       .catch((error) => {
+        this.setState({
+          error: 'Could not delete property.',
+        })
         console.log(error);
       })
   }
@@ -70,19 +80,19 @@ class Feeds extends React.Component {
                     <div className="col-xs-3">
                       <a href="">
                         <span>Tweets<br/></span>
-                        <span className="user-stats-tweets">10</span>
+                        <span className="user-stats-tweets">546</span>
                       </a>
                     </div>
                     <div className="col-xs-4">
                       <a href="">
                         <span>Following<br/></span>
-                        <span className="user-stats-following">0</span>
+                        <span className="user-stats-following">1,345</span>
                       </a>
                     </div>
                     <div className="col-xs-4">
                       <a href="">
                         <span>Followers<br/></span>
-                        <span className="user-stats-followers">0</span>
+                        <span className="user-stats-followers">2,067</span>
                       </a>
                     </div>
                   </div>
@@ -106,22 +116,24 @@ class Feeds extends React.Component {
             <div className="col-xs-6 feed-box">
               <div className="col-xs-12 post-tweet-box">
 
-                {this.props.children}
+                <AddTweet />
 
+              </div>
+
+              <div className="feed">
                 {tweets.map(tweet => {
                   return (
-                    <div key={tweet.id} className="col-6 col-lg-4 mb-4 tweet">
-                      <a href={`/tweet/${tweet.id}`} className="text-body text-decoration-none">
-                        <p className="text-uppercase mb-0 text-secondary">{tweet.message}</p>
+                    <div key={tweet.id} id={tweet.id} className="col-6 col-lg-4 mb-4 tweet">
+                      <div href={`/tweet/${tweet.id}`} className="text-body text-decoration-none">
+                        <a className="tweet-username" href="#">{tweet.username}</a>
+                        <a className="tweet-screenName ms-1" href="#">@User</a>
+                        <p className="mb-0 text-secondary">{tweet.message}</p>
                         <img className="tweet-image mb-1 rounded" src={tweet.image} />
-                      </a>
+                        <button type="button" className="delete-tweet btn btn-danger" onClick={this.deleteTweet}>Delete</button>
+                      </div>
                     </div>
                     )
                   })}
-
-                </div>
-              <div className="feed">
-               
               </div>
             </div>
             <div className="col-xs-3 follow-suggest">
@@ -135,9 +147,7 @@ class Feeds extends React.Component {
 
 document.addEventListener('DOMContentLoaded', () => {
   ReactDOM.render(
-    <Feeds>
-      <AddTweet />
-    </Feeds>,
+    <Feeds />,
     document.body.appendChild(document.createElement('div')),
   )
 })

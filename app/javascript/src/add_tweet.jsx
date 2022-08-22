@@ -9,8 +9,9 @@ class AddTweet extends React.Component {
     super(props);
     this.state = {
       message: '',
-      image: '',
+      image: null,
       charCount: 0,
+      imagePreview: null,
     }
   }
 
@@ -22,6 +23,7 @@ class AddTweet extends React.Component {
   onFileChange = (e) => {
     this.setState({ 
       [e.target.name]: e.target.files[0],
+      imagePreview: URL.createObjectURL(e.target.files[0])
     });
   };
 
@@ -31,10 +33,10 @@ class AddTweet extends React.Component {
     // Create an object of formData
     let formData = new FormData();
     formData.append('tweet[message]', this.state.message)
-
-    //if (this.state.image_url !== null) {
-    formData.append('tweet[image]', this.state.image)
-    //}
+    
+    if (this.state.image != null) {
+      formData.append('tweet[image]', this.state.image)
+    }
 
     fetch('/api/tweets', safeCredentialsFormData({
       method: 'POST',
@@ -71,6 +73,7 @@ class AddTweet extends React.Component {
           <br/>
           <div className="pull-right">
             <label id="upload-image-btn" htmlFor="image-select">Upload image</label>
+            <img id="image-preview" src={this.state.imagePreview} />
             <input type="file" id="image-select" name="image" onChange={this.onFileChange} accept="image/*" />
 
             <button type="submit" className="btn btn-primary" disabled={ !message } id="post-tweet-btn">Tweet</button>
