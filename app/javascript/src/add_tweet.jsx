@@ -12,6 +12,7 @@ class AddTweet extends React.Component {
       image: null,
       charCount: 0,
       imagePreview: null,
+      username: '',
     }
   }
 
@@ -67,15 +68,13 @@ class AddTweet extends React.Component {
 
     return (
       <React.Fragment>
-        <form onSubmit={this.submitTweet} className="form-inline my-4">
+        <form onSubmit={this.submitTweet} className="form-inline">
 
-          <input type="text" className="form-control" placeholder="What's happening?" value={message} onChange={this.handleChange} name="message" required/>
-          <br/>
-          <div className="pull-right">
-            <label id="upload-image-btn" htmlFor="image-select">Upload image</label>
-            <img id="image-preview" src={this.state.imagePreview} />
+          <textarea className="form-control" placeholder="What's happening?" value={message} onChange={this.handleChange} name="message" required/>
+          <div className="d-flex pull-right justify-content-end">
+            <label id="upload-image-btn" className="my-auto me-2" htmlFor="image-select">Upload image</label>
             <input type="file" id="image-select" name="image" onChange={this.onFileChange} accept="image/*" />
-
+            <img id="image-preview" className="me-2" src={this.state.imagePreview} />
             <button type="submit" className="btn btn-primary" disabled={ !message } id="post-tweet-btn">Tweet</button>
             {error && <p className="text-danger mt-2">{error}</p>}
           </div>

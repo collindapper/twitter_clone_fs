@@ -1,6 +1,6 @@
 #feedPage {
   min-height: calc(100vh - 51px);
-  padding-left: 60px;
+  // padding-left: 60px;
   background-color: #C0DEED;
 }
 
@@ -19,6 +19,7 @@
   font-weight: 700;
   font-size: 18px;
   color: inherit !important;
+  text-decoration: none;
 }
 
 .user-field .screenName {
@@ -96,6 +97,7 @@
   font-size: 14px;
   font-weight: bold;
   color: #292f33;
+  text-decoration: none;
 }
 
 .tweet-screenName {
@@ -113,10 +115,16 @@
   margin-bottom: 0;
 }
 
-.tweet img {
-  padding: 10px 0;
+.tweet-image {
+  width: 100%;
 }
 
 .delete-tweet {
-  float: right;
+  color: #b1bbc3;
+}
+
+.tweet-createdTime {
+  color: #b1bbc3;
+  text-decoration: none;
+  font-size: 13px;
 }

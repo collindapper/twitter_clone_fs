@@ -11,6 +11,7 @@ class Feeds extends React.Component {
     state = {
       currentUser: 'User',
       tweets: [],
+      userTweetInfo: [],
   }
 
   componentDidMount () {
@@ -24,12 +25,13 @@ class Feeds extends React.Component {
       this.setState({
         tweets: data.tweets,
       })
+      console.log(data.tweets);
     })
     this.displayUsername();
   }
 
   displayUsername() {
-    fetch(`/api/authenticated`, safeCredentials({
+    fetch('/api/authenticated', safeCredentials({
       method: 'GET',
     }))
     .then(handleErrors)
@@ -38,6 +40,7 @@ class Feeds extends React.Component {
         currentUser: data.username });
     })
   }
+
 
   deleteTweet = (e) => {
     e.preventDefault();
@@ -68,28 +71,29 @@ class Feeds extends React.Component {
     return (
       <Navbar>
         <div id="feedPage">
-          <div className="row">
-            <div className="col-xs-3 profile-trends">
-              <div className="profileCard col-xs-12">
+          <div className="row container mx-auto">
+            <div className="col-xs-12 col-md-4 profile-trends">
+
+              <div className="profileCard">
                 <div className="profileCard-content">
-                  <div className="user-field col-xs-12">
+                  <div className="user-field col-xs-12 ms-3">
                     <a className="username" href={`/${currentUser}`}>{currentUser}</a><br/>
                     <a className="screenName" href="#">@{currentUser}</a>
                   </div>
-                  <div className="user-stats">
-                    <div className="col-xs-3">
+                  <div className="d-flex user-stats justify-content-around">
+                    <div className="">
                       <a href="">
                         <span>Tweets<br/></span>
                         <span className="user-stats-tweets">546</span>
                       </a>
                     </div>
-                    <div className="col-xs-4">
+                    <div className="">
                       <a href="">
                         <span>Following<br/></span>
                         <span className="user-stats-following">1,345</span>
                       </a>
                     </div>
-                    <div className="col-xs-4">
+                    <div className="">
                       <a href="">
                         <span>Followers<br/></span>
                         <span className="user-stats-followers">2,067</span>
@@ -98,8 +102,9 @@ class Feeds extends React.Component {
                   </div>
                 </div>
               </div>
+
               <div className="trends col-xs-12">
-                <div className="col-xs-12">
+                <div className="col-xs-12 ms-3">
                   <div className="trends-header">
                     <span>Trends</span><span> &#183; </span><small><a href="">Change</a></small>
                   </div>
@@ -113,23 +118,38 @@ class Feeds extends React.Component {
                 </div>
               </div>
             </div>
-            <div className="col-xs-6 feed-box">
-              <div className="col-xs-12 post-tweet-box">
 
+            <div className="col-12 col-md-6 feed-box">
+              <div className="col-12 post-tweet-box">
                 <AddTweet />
-
               </div>
 
               <div className="feed">
                 {tweets.map(tweet => {
                   return (
-                    <div key={tweet.id} id={tweet.id} className="col-6 col-lg-4 mb-4 tweet">
+                    <div key={tweet.id} id={tweet.id} className="d-flex mx-auto col-11 mb-4 tweet rounded">
                       <div href={`/tweet/${tweet.id}`} className="text-body text-decoration-none">
                         <a className="tweet-username" href="#">{tweet.username}</a>
-                        <a className="tweet-screenName ms-1" href="#">@User</a>
+                        <a className="tweet-screenName text-lowercase ms-1" href="#">@{tweet.username}</a>
                         <p className="mb-0 text-secondary">{tweet.message}</p>
-                        <img className="tweet-image mb-1 rounded" src={tweet.image} />
-                        <button type="button" className="delete-tweet btn btn-danger" onClick={this.deleteTweet}>Delete</button>
+
+                        {(tweet.image !== null)
+                        ?
+                        <img className="d-flex img-fluid tweet-image mb-1 justify-content-center rounded" src={tweet.image} />
+                        :
+                        <div></div>
+                        }
+
+                        <div className="d-flex justify-content-between ms-auto py-auto">
+                          <p className="tweet-createdTime">{tweet.created_at}</p>
+                          
+                          {(currentUser === tweet.username)
+                          ?
+                          <i type="button" className="delete-tweet fa-solid fa-trash-can" onClick={this.deleteTweet}></i>
+                          :
+                          <div></div>
+                          }
+                        </div>
                       </div>
                     </div>
                     )

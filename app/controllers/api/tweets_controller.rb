@@ -49,14 +49,14 @@ module Api
 
       if user
         @tweets = (user.tweets).order(created_at: :desc)
-        render 'api/tweets/index'
+        render 'api/tweets/details'
       end
     end
 
     private
 
       def tweet_params
-        params.require(:tweet).permit(:message, :image)
+        params.require(:tweet).permit(:message, :image, :user)
       end
   end
 end
