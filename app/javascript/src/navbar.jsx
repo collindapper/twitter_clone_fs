@@ -25,6 +25,12 @@ componentDidMount () {
   })
 }
 
+loadFeeds = (e) => {
+  const params = new URLSearchParams(window.location.search);
+  const redirect_url = params.get('redirect_url') || '/feeds';
+  window.location = redirect_url;
+}
+
 
 handleLogout = (e) => {
   e.preventDefault();
@@ -66,7 +72,7 @@ toggleOpen = () => {
         <nav className="d-flex navbar-default navbar-fixed-top">
           <div className="container">
             <div className="navbar-header my-2">
-              <a className="navbar-brand" href="#">
+              <a className="navbar-brand" href="#" onClick={this.loadFeeds}>
                 <i className="fa-brands fa-twitter"></i>
               </a>
             </div>

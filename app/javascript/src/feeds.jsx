@@ -11,7 +11,7 @@ class Feeds extends React.Component {
     state = {
       currentUser: 'User',
       tweets: [],
-      userTweetInfo: [],
+      userTweets: [],
   }
 
   componentDidMount () {
@@ -38,6 +38,36 @@ class Feeds extends React.Component {
     .then(data => {
       this.setState({ 
         currentUser: data.username });
+    })
+  }
+
+  loadUserFeed = (e) => {
+    e.preventDefault();
+    let tweetEl = e.target.closest(".tweet-username")
+    let tweetUsername = tweetEl.getAttribute('id')
+
+    fetch(`api/${tweetUsername}/tweets`)
+    .then(handleErrors)
+    .then(data => {
+      this.setState({
+        tweets: data.tweets,
+      })
+      console.log(data.tweets);
+    })
+  }
+
+  loadCurrentUserFeed = (e) => {
+    e.preventDefault();
+    let tweetEl = e.target.closest(".username")
+    let tweetUsername = tweetEl.getAttribute('id')
+
+    fetch(`api/${tweetUsername}/tweets`)
+    .then(handleErrors)
+    .then(data => {
+      this.setState({
+        tweets: data.tweets,
+      })
+      console.log(data.tweets);
     })
   }
 
@@ -77,8 +107,8 @@ class Feeds extends React.Component {
               <div className="profileCard">
                 <div className="profileCard-content">
                   <div className="user-field col-xs-12 ms-3">
-                    <a className="username" href={`/${currentUser}`}>{currentUser}</a><br/>
-                    <a className="screenName" href="#">@{currentUser}</a>
+                    <a id={currentUser} className="username" href="#" onClick={this.loadCurrentUserFeed}>{currentUser}</a><br/>
+                    <a className="screenName">@{currentUser}</a>
                   </div>
                   <div className="d-flex user-stats justify-content-around">
                     <div className="">
@@ -127,10 +157,10 @@ class Feeds extends React.Component {
               <div className="feed">
                 {tweets.map(tweet => {
                   return (
-                    <div key={tweet.id} id={tweet.id} className="d-flex mx-auto col-11 mb-4 tweet rounded">
-                      <div href={`/tweet/${tweet.id}`} className="text-body text-decoration-none">
-                        <a className="tweet-username" href="#">{tweet.username}</a>
-                        <a className="tweet-screenName text-lowercase ms-1" href="#">@{tweet.username}</a>
+                    <div key={tweet.id} id={tweet.id} className="d-flex mx-auto col-12 mb-4 tweet rounded">
+                      <div href={`/tweet/${tweet.id}`} className="tweet-body text-decoration-none">
+                        <a id={tweet.username} className="tweet-username" href="#" onClick={this.loadUserFeed}>{tweet.username}</a>
+                        <a className="tweet-screenName text-lowercase ms-1">@{tweet.username}</a>
                         <p className="mb-0 text-secondary">{tweet.message}</p>
 
                         {(tweet.image !== null)
@@ -140,7 +170,7 @@ class Feeds extends React.Component {
                         <div></div>
                         }
 
-                        <div className="d-flex justify-content-between ms-auto py-auto">
+                        <div className="d-flex justify-content-between align-items-center">
                           <p className="tweet-createdTime">{tweet.created_at}</p>
                           
                           {(currentUser === tweet.username)

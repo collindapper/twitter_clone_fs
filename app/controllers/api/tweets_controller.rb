@@ -49,7 +49,7 @@ module Api
 
       if user
         @tweets = (user.tweets).order(created_at: :desc)
-        render 'api/tweets/details'
+        render 'api/tweets/index'
       end
     end
 

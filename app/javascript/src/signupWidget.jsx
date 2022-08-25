@@ -56,7 +56,7 @@ class SignupWidget extends React.Component {
       method: 'POST',
       body: JSON.stringify({
         user: {
-          email: this.state.email,
+          username: this.state.username,
           password: this.state.password,
         }
       })
