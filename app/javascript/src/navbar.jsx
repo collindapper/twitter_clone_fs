@@ -10,6 +10,7 @@ class Navbar extends React.Component {
     this.state = {
       authenticated: false,
       currentUser: '',
+      isOpen: false,
     }
   }
 
@@ -22,6 +23,12 @@ componentDidMount () {
       authenticated: data.authenticated, 
     });
   })
+}
+
+loadFeeds = (e) => {
+  const params = new URLSearchParams(window.location.search);
+  const redirect_url = params.get('redirect_url') || '/feeds';
+  window.location = redirect_url;
 }
 
 
@@ -39,7 +46,7 @@ handleLogout = (e) => {
         authenticated: false,
       })
       const params = new URLSearchParams(window.location.search);
-      const redirect_url = params.get('redirect_url') || '/feeds';
+      const redirect_url = params.get('redirect_url') || '/';
       window.location = redirect_url;
     }
   })
@@ -50,42 +57,51 @@ handleLogout = (e) => {
   })
 }
 
+toggleOpen = () => {
+  this.setState({
+    isOpen: !this.state.isOpen
+  });
+}
+
   render () {
     const {currentUser} = this.state;
+    const menuClass = `dropdown-menu${this.state.isOpen ? " show" : ""}`;
 
     return (
       <React.Fragment> 
         <nav className="d-flex navbar-default navbar-fixed-top">
           <div className="container">
-            <div className="navbar-header">
-              <a className="navbar-brand" href="#">
-                <i className="fa fa-twitter"></i>
+            <div className="navbar-header my-2">
+              <a className="navbar-brand" href="#" onClick={this.loadFeeds}>
+                <i className="fa-brands fa-twitter"></i>
               </a>
             </div>
-            <ul className="nav navbar-nav navbar-right">
-              <li className="dropdown">
-                <a href="#" className="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><span id="user-icon">{currentUser}</span></a>
-                <ul className="dropdown-menu row" role="menu">
-                  <li ><a href="#" className="username">{currentUser}</a></li>
+            <ul className="nav navbar-nav navbar-right my-2">
+              <div className="dropdown" onClick={this.toggleOpen}>
+                <a href="#" id="dropdownMenuLink" className="dropdown-toggle mx-md-5" data-bs-toggle="dropdown" role="button" aria-expanded="false"><span id="user-icon">{currentUser}</span></a>
+                <ul id="dropdownList row" className={menuClass} role="menu" aria-labelledby="dropdownMenuLink">
+                  <li ><a href="#" className="dropdown-item username">{currentUser}</a></li>
                   <li role="presentation" className="divider"></li>
-                  <li ><a href="#">Lists</a></li>
+                  <li ><a className="dropdown-item" href="#">Lists</a></li>
                   <li role="presentation" className="divider"></li>
-                  <li ><a href="#">Help</a></li>
-                  <li ><a href="#">Keyboard shortcuts</a></li>
+                  <li ><a className="dropdown-item" href="#">Help</a></li>
+                  <li ><a className="dropdown-item" href="#">Keyboard shortcuts</a></li>
                   <li role="presentation" className="divider"></li>
-                  <li ><a href="#">Settings</a></li>
-                  <li ><a onClick={this.handleLogout} id="log-out" href="#">Log out</a></li>
+                  <li ><a className="dropdown-item" href="#">Settings</a></li>
+                  <li ><a className="dropdown-item" onClick={this.handleLogout} id="log-out" href="#">Log out</a></li>
                 </ul>
-              </li>
+              </div>
             </ul>
-            <div className="search-bar col-xs-3 nav navbar-right">
-              <div className="input-group">
-                <input type="text" className="form-control search-input" placeholder="Search for..." />
+            
+            <div className="d-md-flex d-none search-bar nav navbar-right pt-1">
+              <div className="input-group border rounded">
+                <input type="text" className="form-control search-input border" placeholder="Search for..." />
                 <span className="input-group-btn">
-                  <button className="btn btn-default search-btn" type="button">Go!</button>
+                  <button className="btn btn-outline-secondary border search-btn rounded-0" type="button">Go!</button>
                 </span>
               </div>
             </div>
+
           </div>
         </nav>
         <div>

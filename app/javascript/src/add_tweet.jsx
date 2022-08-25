@@ -9,8 +9,10 @@ class AddTweet extends React.Component {
     super(props);
     this.state = {
       message: '',
-      image: '',
+      image: null,
       charCount: 0,
+      imagePreview: null,
+      username: '',
     }
   }
 
@@ -22,6 +24,7 @@ class AddTweet extends React.Component {
   onFileChange = (e) => {
     this.setState({ 
       [e.target.name]: e.target.files[0],
+      imagePreview: URL.createObjectURL(e.target.files[0])
     });
   };
 
@@ -31,10 +34,10 @@ class AddTweet extends React.Component {
     // Create an object of formData
     let formData = new FormData();
     formData.append('tweet[message]', this.state.message)
-
-     //if (this.state.image_url !== null) {
+    
+    if (this.state.image != null) {
       formData.append('tweet[image]', this.state.image)
-     //}
+    }
 
     fetch('/api/tweets', safeCredentialsFormData({
       method: 'POST',
@@ -65,14 +68,13 @@ class AddTweet extends React.Component {
 
     return (
       <React.Fragment>
-        <form onSubmit={this.submitTweet} className="form-inline my-4">
+        <form onSubmit={this.submitTweet} className="form-inline">
 
-          <input type="text" className="form-control" placeholder="What's happening?" value={message} onChange={this.handleChange} name="message" required/>
-          <br/>
-          <div className="pull-right">
-            <label id="upload-image-btn" htmlFor="image-select">Upload image</label>
+          <textarea className="form-control" placeholder="What's happening?" value={message} onChange={this.handleChange} name="message" required/>
+          <div className="d-flex pull-right justify-content-end">
+            <label id="upload-image-btn" className="my-auto me-2" htmlFor="image-select">Upload image</label>
             <input type="file" id="image-select" name="image" onChange={this.onFileChange} accept="image/*" />
-
+            <img id="image-preview" className="me-2" src={this.state.imagePreview} />
             <button type="submit" className="btn btn-primary" disabled={ !message } id="post-tweet-btn">Tweet</button>
             {error && <p className="text-danger mt-2">{error}</p>}
           </div>
