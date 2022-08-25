@@ -1,4 +1,4 @@
-module Api  
+module Api
   class TweetsController < ApplicationController
     def index
       @tweets = Tweet.all.order(created_at: :desc)
@@ -55,8 +55,8 @@ module Api
 
     private
 
-      def tweet_params
-        params.require(:tweet).permit(:message, :image, :user)
-      end
+    def tweet_params
+      params.require(:tweet).permit(:message, :image)
+    end
   end
 end
