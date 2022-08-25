@@ -1,7 +1,6 @@
 {
   "name": "twitter-clone-fs",
   "private": true,
-
   "engine": {
     "node": "~12.22"
   },
