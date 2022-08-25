@@ -57,7 +57,7 @@ render () {
           <div className="container">
             <div className="row mx-auto">
 
-              <div className="left-panel col-12 col-md-8 mx-auto">
+              <div className="left-panel col-12 col-md-5 mx-auto">
                 <div className="col-12 welcome">
                   <div id="welcome-text">
                     <h1><strong>Welcome to Twitter.</strong></h1>

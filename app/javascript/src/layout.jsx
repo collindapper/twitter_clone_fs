@@ -16,11 +16,11 @@ class Layout extends React.Component {
 
     return (
       <React.Fragment>
-        <nav className="navbar-default navbar-fixed-top">
-          <div className="container">
+        <nav className="navbar-default navbar-fixed-top py-2">
+          <div className="container ">
             <div className="navbar-header">
               <a className="navbar-brand" href="#">
-                <i className="fa fa-twitter"></i>
+                <i className="fa-brands fa-twitter"></i>
               </a>
             </div>
             <ul className="nav navbar-nav navbar-right">
