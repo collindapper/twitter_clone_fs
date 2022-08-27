@@ -2,7 +2,6 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import Navbar from './navbar';
 import AddTweet from './add_tweet';
-import { BrowserRouter as Router, Switch, Route, Link } from 'react-router-dom';
 import { safeCredentials, safeCredentialsFormData,  handleErrors } from '@utils/fetchHelper';
 
 import './user_tweets.scss';
@@ -12,7 +11,6 @@ class UserTweets extends React.Component {
     state = {
       currentUser: 'User',
       tweets: [],
-      userTweets: [],
   }
 
   componentDidMount () {
@@ -20,7 +18,9 @@ class UserTweets extends React.Component {
   }
 
   loadFeeds() {
-    fetch('/api/:username/tweets')
+    const username = this.props.data.username;
+
+    fetch(`/api/${username}/tweets`)
     .then(handleErrors)
     .then(data => {
       this.setState({
@@ -41,40 +41,6 @@ class UserTweets extends React.Component {
         currentUser: data.username });
     })
   }
-
-  loadUserFeed = (e) => {
-    e.preventDefault();
-    let tweetEl = e.target.closest(".tweet-username")
-    let tweetUsername = tweetEl.getAttribute('id')
-
-    fetch(`api/${tweetUsername}/tweets`)
-    .then(handleErrors)
-    .then(data => {
-      this.setState({
-        tweets: data.tweets,
-      })
-      const params = new URLSearchParams(window.location.search);
-      const redirect_url = params.get('redirect_url') || `/feeds/${tweetUsername}`;
-      window.location = redirect_url;
-      console.log(data.tweets);
-    })
-  }
-
-  loadCurrentUserFeed = (e) => {
-    e.preventDefault();
-    let tweetEl = e.target.closest(".username")
-    let tweetUsername = tweetEl.getAttribute('id')
-
-    fetch(`api/${tweetUsername}/tweets`)
-    .then(handleErrors)
-    .then(data => {
-      this.setState({
-        tweets: data.tweets,
-      })
-      console.log(data.tweets);
-    })
-  }
-
 
   deleteTweet = (e) => {
     e.preventDefault();
@@ -200,8 +166,11 @@ class UserTweets extends React.Component {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
+  const node = document.getElementById('params')
+  const data = JSON.parse(node.getAttribute('data-params'))
+
   ReactDOM.render(
-    <UserTweets />,
+    <UserTweets data={data}/>,
     document.body.appendChild(document.createElement('div')),
   )
 })
