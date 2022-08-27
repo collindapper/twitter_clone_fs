@@ -4,7 +4,6 @@ class StaticPagesController < ApplicationController
   end
 
   def feeds
-    @data = { tweet_id: params[:id] }.to_json
     render 'feeds'
   end
 

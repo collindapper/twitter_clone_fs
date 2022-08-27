@@ -2,6 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import Navbar from './navbar';
 import AddTweet from './add_tweet';
+import { BrowserRouter, Link, Route, Switch } from 'react-router-dom'
 import { safeCredentials, safeCredentialsFormData,  handleErrors } from '@utils/fetchHelper';
 
 import './feeds.scss';
@@ -28,6 +29,7 @@ class Feeds extends React.Component {
       console.log(data.tweets);
     })
     this.displayUsername();
+    
   }
 
   displayUsername() {
@@ -52,7 +54,11 @@ class Feeds extends React.Component {
       this.setState({
         tweets: data.tweets,
       })
+      const params = new URLSearchParams(window.location.search);
+      const redirect_url = params.get('redirect_url') || `/feeds/${tweetUsername}`;
+      window.location = redirect_url;
       console.log(data.tweets);
+      
     })
   }
 
@@ -67,6 +73,9 @@ class Feeds extends React.Component {
       this.setState({
         tweets: data.tweets,
       })
+      const params = new URLSearchParams(window.location.search);
+      const redirect_url = params.get('redirect_url') || `/feeds/${tweetUsername}`;
+      window.location = redirect_url;
       console.log(data.tweets);
     })
   }
@@ -97,6 +106,7 @@ class Feeds extends React.Component {
 
   render () {
     const {currentUser, tweets } = this.state;
+    
 
     return (
       <Navbar>
