@@ -2,8 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import Navbar from './navbar';
 import AddTweet from './add_tweet';
-import { BrowserRouter, Link, Route, Switch } from 'react-router-dom'
-import { safeCredentials, safeCredentialsFormData,  handleErrors } from '@utils/fetchHelper';
+import { safeCredentials, handleErrors } from '@utils/fetchHelper';
 
 import './feeds.scss';
 

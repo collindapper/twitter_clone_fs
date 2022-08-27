@@ -1,6 +1,5 @@
 // loginWidget.jsx
 import React from 'react';
-import ReactDOM from 'react-dom';
 import { safeCredentials, handleErrors } from '@utils/fetchHelper';
 
 class LoginWidget extends React.Component {
@@ -47,7 +46,8 @@ class LoginWidget extends React.Component {
   }
 
   render () {
-    const { username, password, error } = this.state;
+    const { username, password } = this.state;
+    
     return (
       <React.Fragment>
         <form onSubmit={this.login}>

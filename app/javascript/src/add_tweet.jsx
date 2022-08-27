@@ -1,6 +1,5 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
-import { safeCredentials, safeCredentialsFormData,  handleErrors } from '@utils/fetchHelper';
+import { safeCredentialsFormData,  handleErrors } from '@utils/fetchHelper';
 
 import './add_tweet.scss';
 

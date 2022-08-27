@@ -37,7 +37,7 @@ gem 'bootsnap', '>= 1.4.4', require: false
 gem "font-awesome-sass", "~> 6.1.2"
 
 # AWS S3
-gem 'aws-sdk-s3', '~> 1.112'
+gem 'aws-sdk', '~> 3.0'
 
 # Webrick
 gem "webrick", "~> 1.7"

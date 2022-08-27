@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom';
 import LoginWidget from './loginWidget';
 import SignupWidget from './signupWidget';
 import Layout from './layout';
-import { safeCredentials, handleErrors } from '@utils/fetchHelper';
+import { handleErrors } from '@utils/fetchHelper';
 
 import './home.scss';
 
@@ -47,7 +47,6 @@ componentWillUnmount () {
 
 render () {
   const backgroundImg = backgroundURL[this.state.backStep];
-  const {login_username, login_password, signup_email, signup_username, signup_password} = this.state;
 
     return (
       <Layout>
