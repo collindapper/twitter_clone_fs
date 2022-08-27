@@ -60,8 +60,6 @@ class AddTweet extends React.Component {
       })
   }
 
- 
-
   render () {
     const { message, error } = this.state;
 
