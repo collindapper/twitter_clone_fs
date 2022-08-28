@@ -11,7 +11,6 @@ class Feeds extends React.Component {
     state = {
       currentUser: 'User',
       tweets: [],
-      userTweets: [],
   }
 
   componentDidMount () {
