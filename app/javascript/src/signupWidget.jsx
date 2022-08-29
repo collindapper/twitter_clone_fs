@@ -34,12 +34,13 @@ class SignupWidget extends React.Component {
     }))
       .then(handleErrors)
       .then(data => {
+        console.log('data');
+        this.login();
       })
       .catch(error => {
         this.setState({
           error: 'Could not sign up.',
         })
-        this.login();
       })
   }
 
