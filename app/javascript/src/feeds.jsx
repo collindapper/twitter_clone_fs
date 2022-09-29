@@ -105,7 +105,6 @@ class Feeds extends React.Component {
   render () {
     const {currentUser, tweets } = this.state;
     
-
     return (
       <Navbar>
         <div id="feedPage">
