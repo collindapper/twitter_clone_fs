@@ -30,7 +30,6 @@ class AddTweet extends React.Component {
   submitTweet = (e) => {
     e.preventDefault();
 
-    // Create an object of formData
     let formData = new FormData();
     formData.append('tweet[message]', this.state.message)
     
